@@ -8,8 +8,16 @@ import os, hydra, traceback, torch, tqdm, yaml
 import numpy as np
 from data4robotics import misc
 from omegaconf import DictConfig, OmegaConf
+from pathlib import Path
+import shutil
 base_path = os.path.dirname(os.path.abspath(__file__))
 
+obs_config = """
+img: ['cam0']
+transform:
+  _target_: data4robotics.transforms.get_transform_by_name
+  name: preproc    
+"""
 
 @hydra.main(config_path=os.path.join(base_path, 'experiments'), config_name="finetune.yaml")
 def bc_finetune(cfg: DictConfig):
@@ -24,6 +32,10 @@ def bc_finetune(cfg: DictConfig):
         with open('agent_config.yaml', 'w') as f:
             agent_yaml = OmegaConf.to_yaml(cfg.agent, resolve=True)
             f.write(agent_yaml)
+        with open('obs_config.yaml', 'w') as f:
+            f.write(obs_config)
+        # ac_norm_path = Path(cfg.buffer_path).parent / "ac_norm.json"
+        # shutil.copy(ac_norm_path, Path(cfg.checkpoint_path).parent)
         
         agent = hydra.utils.instantiate(cfg.agent)
         trainer = hydra.utils.instantiate(cfg.trainer, agent=agent, device_id=0)

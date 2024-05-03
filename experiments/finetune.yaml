@@ -8,13 +8,14 @@ defaults:
   - agent: default
   - task: franka
   - trainer: bc
-  - override hydra/launcher: slurm
+  # - override hydra/launcher: slurm
   - _self_
 
 
 hydra:
   run:
-    dir: bc_finetune/${exp_name}/${hydra:runtime.choices.task}_${hydra:runtime.choices.agent/features}_${now:%Y-%m-%d_%H-%M-%S}
+    # dir: bc_finetune/${exp_name}/${hydra:runtime.choices.task}_${hydra:runtime.choices.agent/features}_${now:%Y-%m-%d_%H-%M-%S}
+    dir: bc_finetune/${exp_name}
   sweep:
     dir: ${base:}/../bc_finetune/${exp_name}/${now:%Y-%m-%d_%H-%M-%S}
     subdir: run${hydra:job.num}_${hydra:runtime.choices.task}_${hydra:runtime.choices.agent/features}
@@ -22,12 +23,12 @@ hydra:
 rt: ${hydra:runtime.choices.agent/features}
 
 exp_name: test
-checkpoint_path: ${exp_name}.ckpt
-batch_size: 100
+checkpoint_path: latest_model.ckpt
+batch_size: 32
 num_workers: 10
-max_iterations: 50000
-eval_freq: 10000
-save_freq: 10000
+max_iterations: 5000
+eval_freq: 100
+save_freq: 100
 devices: 1
 seed: 292285
 
@@ -40,4 +41,4 @@ wandb:
   project: data_proj_finetune
   group: ${exp_name}
   sweep_name_prefix: eval
-  debug: False
+  debug: True
