@@ -122,9 +122,8 @@ class RobobufReplayBuffer(ReplayBuffer):
         rng.shuffle(index_list)
 
         # split data according to mode
-        # debug: overfit
-        # index_list = index_list[n_test_trans:] if mode == 'train' \
-        #              else index_list[:n_test_trans]
+        index_list = index_list[n_test_trans:] if mode == 'train' \
+                     else index_list[:n_test_trans]
         
         self.transform = transform
         self.s_a_mask = []
