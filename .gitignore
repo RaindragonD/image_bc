@@ -3,6 +3,6 @@
 *.mp4
 *.png
 __pycache__/
-bc_finetune/
+checkpoints
 visual_features/
 *.egg-info/
