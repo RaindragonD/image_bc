@@ -5,11 +5,12 @@
 
 
 defaults:
-  - features: robomimic
+  - features: vit_base
+  # - features: robomimic
   - _self_
 
 _target_: data4robotics.models.diffusion_unet.DiffusionUnetAgent
-shared_mlp: []
+shared_mlp: [256]
 odim: ${task.obs_dim}
 n_cams: ${task.n_cams}
 use_obs: False

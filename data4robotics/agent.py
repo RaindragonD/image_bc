@@ -34,10 +34,14 @@ class Agent(nn.Module):
         mlp_def = [mlp_in] + shared_mlp
         layers = [nn.BatchNorm1d(num_features=mlp_in)] if feat_batch_norm \
                  else []
+                 
+        layer_count = 0
         for i, o in zip(mlp_def[:-1], mlp_def[1:]):
             layers.append(nn.Dropout(dropout))
             layers.append(nn.Linear(i, o))
-            layers.append(nn.ReLU())
+            if layer_count < len(mlp_def)-2:
+                layers.append(nn.ReLU())
+            layer_count +=1
         layers.append(nn.Dropout(dropout))
         self._shared_mlp = nn.Sequential(*layers)
         self.obs_enc_dim = mlp_def[-1]
